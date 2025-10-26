@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\alyog\AppData\Local\Microsoft\WinGet\Packages\Kubernetes.kompose_Microsoft.Winget.Source_8wekyb3d8bbwe\kompose.exe convert -f compose.yaml
+    kompose.version: 1.37.0 (fb0539e64)
+  labels:
+    io.kompose.service: webapp-2
+  name: webapp-2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      io.kompose.service: webapp-2
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\alyog\AppData\Local\Microsoft\WinGet\Packages\Kubernetes.kompose_Microsoft.Winget.Source_8wekyb3d8bbwe\kompose.exe convert -f compose.yaml
+        kompose.version: 1.37.0 (fb0539e64)
+      labels:
+        io.kompose.service: webapp-2
+    spec:
+      containers:
+        - env:
+            - name: MONGODB_HOST
+              value: mongodb
+            - name: MONGODB_PASSWORD
+              value: password123
+            - name: MONGODB_USER
+              value: admin
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 25
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          image: webapp-2:latest
+          name: webapp-2
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
